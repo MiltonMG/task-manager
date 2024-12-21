@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { task } from "@prisma/client";
 import clsx from "clsx";
+import { TaskButtonDelete } from "./task-button-delete";
 
 export const TaskCard = ({ task }: {task:task}) => {
   return (
@@ -24,7 +25,7 @@ export const TaskCard = ({ task }: {task:task}) => {
           </CardContent>
           <CardFooter className="flex justify-end gap-4">
             <Button variant="outline">Update</Button>
-            <Button variant="outline">Delete</Button>
+            <TaskButtonDelete taskId={ task.id } />
           </CardFooter>
         </Card>
     )
