@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -19,15 +19,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { createTask } from "@/actions/tasks-actions"
+import { createTask, updateTask } from "@/actions/tasks-actions"
+import { task } from "@prisma/client"
+import Link from "next/link"
 
 
-export function TaskForm() {
+export function TaskForm( {Task}: {Task:task} ) {
 
-  
+  const functionAction = Task?.id ? updateTask : createTask
 
   return (
-    <form action={createTask}>
+    <form action={functionAction}>
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Create A Task</CardTitle>
@@ -35,17 +37,22 @@ export function TaskForm() {
         </CardHeader>
         <CardContent>
           <div className="grid w-full items-center gap-4">
+            <input type="hidden" name="taskId" value={Task?.id} />
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Task Name</Label>
-              <Input name="name" id="name" placeholder="Name of your project" />
+              <Input name="name" id="name" placeholder="Name of your project" 
+              defaultValue={Task?.name}
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="description">Description</Label>
-              <Textarea id="description" name="description" placeholder="Task description." />
+              <Textarea id="description" name="description" placeholder="Task description." 
+              defaultValue={Task?.description || ""}
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="framework">Priority</Label>
-              <Select name="priority">
+              <Select name="priority" defaultValue={Task?.priority}>
                 <SelectTrigger id="priority">
                   <SelectValue placeholder="Select priority" />
                 </SelectTrigger>
@@ -60,8 +67,10 @@ export function TaskForm() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
-          <Button type="submit">Create a new task</Button>
+          <Link href="/" className={ buttonVariants({ variant:"outline" }) }>Cancel</Link>
+          <Button type="submit">
+            {Task?.id ? "Update Task" : "Create Task"}
+          </Button>
         </CardFooter>
       </Card>
     </form>
